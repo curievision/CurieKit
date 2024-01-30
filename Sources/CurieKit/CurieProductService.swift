@@ -8,7 +8,7 @@
 import Foundation
 
 protocol ProductAPIService {
-    func getProduct(with productId: String) async throws -> Product?
+    func getProduct(with productId: String) async throws -> CurieProduct?
 }
 
 /// The service responsible for retrieving Products
@@ -34,18 +34,18 @@ public final class CurieProductService: ProductAPIService {
     
     // MARK: Public
     
-    /// Gets the corresponding `Product` with a given identifier
-    /// - Parameter identifier: The unique identifer of the `Product`
-    /// - Returns: A `Product` with a matching identifier OR an `ServiceError`
-    public func getProduct(with identifier: String) async throws -> Product? {
+    /// Gets the corresponding `CurieProduct` with a given identifier
+    /// - Parameter identifier: The unique identifer of the `CurieProduct`
+    /// - Returns: A `CurieProduct` with a matching identifier OR an `ServiceError`
+    public func getProduct(with identifier: String) async throws -> CurieProduct? {
         guard let signedURL = try? await getSignedURL(for: identifier) else { return nil }
         return try await getProduct(signedURL, productId: identifier)
     }
     
     // MARK: Private
     
-    /// Gets a signed URL using the given api key and `Product` identifier
-    /// - Parameter productId: The unique identifier of the `Product`
+    /// Gets a signed URL using the given api key and `CurieProduct` identifier
+    /// - Parameter productId: The unique identifier of the `CurieProduct`
     /// - Returns: A signed URL unique to the product OR a `ServiceError`
     private func getSignedURL(for productId: String) async throws -> URL? {
         
@@ -68,17 +68,17 @@ public final class CurieProductService: ProductAPIService {
         }
     }
     
-    /// Gets the `Product` from the signed URL
+    /// Gets the `CurieProduct` from the signed URL
     /// - Parameters:
-    ///   - signedURL: The URL used to get the `Product`
-    ///   - productId: The unique identifier of the `Product`
-    /// - Returns: A `Product` with a matching identifier OR an `ServiceError`
-    private func getProduct(_ signedURL: URL, productId: String) async throws -> Product? {
+    ///   - signedURL: The URL used to get the `CurieProduct`
+    ///   - productId: The unique identifier of the `CurieProduct`
+    /// - Returns: A `CurieProduct` with a matching identifier OR an `ServiceError`
+    private func getProduct(_ signedURL: URL, productId: String) async throws -> CurieProduct? {
         
         do {
             let url = try await downloadAsset(from: signedURL)
         
-            return Product(id: productId,
+            return CurieProduct(id: productId,
                            url: url,
                            name: "",
                            timestamp: Date())
