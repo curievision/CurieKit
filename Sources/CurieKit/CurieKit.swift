@@ -13,13 +13,14 @@ public protocol ProductAPIService {
 }
 
 /// The service responsible for retrieving Products
-public final class CurieKit: ProductAPIService {
+public final actor CurieKit: ProductAPIService {
 
     public enum ServiceError: Error {
         case decodingError
         case invalidResponse
         case invalidURL
         case api(Error)
+        case message(String)
     }
     
     private let signedURLString = "https://api.curie.io/public/products/signurl?product_id="
@@ -35,10 +36,18 @@ public final class CurieKit: ProductAPIService {
     
     // MARK: Public
     
-    /// Gets the corresponding `CurieProduct` with a given identifier
+    /// Gets the corresponding `CurieProduct` with a given identifier locally or from the server
     /// - Parameter identifier: The unique identifer of the `CurieProduct`
     /// - Returns: A `CurieProduct` with a matching identifier OR an `ServiceError`
     public func getProduct(with identifier: String) async throws -> CurieProduct? {
+        
+        if let existingURL = getExistingProductURL(with: identifier) {
+            return CurieProduct(id: identifier,
+                                url: existingURL,
+                                name: "",
+                                timestamp: Date())
+        }
+                
         guard let signedURL = try? await getSignedURL(for: identifier) else { return nil }
         return try await getProduct(signedURL, productId: identifier)
     }
@@ -85,6 +94,19 @@ public final class CurieKit: ProductAPIService {
                            timestamp: Date())
         } catch {
             throw ServiceError.api(error)
+        }
+    }
+    
+    /// Returns an existing URL of a `CurrieProduct`'s 3D asset if one exists
+    /// - Parameter productId: The unique identifier of the `CurrieProduct`
+    /// - Returns: The optional URL of the `CurrieProduct` 3D asset
+    private func getExistingProductURL(with identifier: String) -> URL? {
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let existingURL = documentsURL.appendingPathComponent("\(identifier).usdz")
+        if FileManager.default.fileExists(atPath: existingURL.path) {
+            return existingURL
+        } else {
+            return nil
         }
     }
     
