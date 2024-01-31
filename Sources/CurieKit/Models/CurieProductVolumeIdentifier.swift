@@ -7,4 +7,5 @@
 
 import Foundation
 
+public let CurieProductWindowIdentifier: String = "CurieProductWindowIdentifier" // Todo need to rethink this
 public let CurieProductVolumeIdentifier: String = "CurieProductVolumeIdentifier"

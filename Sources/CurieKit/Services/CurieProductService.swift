@@ -7,7 +7,8 @@
 
 import Foundation
 
-protocol ProductAPIService {
+// The protocol conformance for objects wanting to retrieve `CurieProduct`'s
+public protocol ProductAPIService {
     func getProduct(with productId: String) async throws -> CurieProduct?
 }
 

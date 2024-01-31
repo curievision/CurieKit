@@ -25,7 +25,7 @@ public class ViewModel {
     let service: ProductAPIService
     var isShowingProduct: Bool = false
     
-    required init(with service: ProductAPIService) {
+    public required init(with service: ProductAPIService) {
         self.service = service
     }
 }
