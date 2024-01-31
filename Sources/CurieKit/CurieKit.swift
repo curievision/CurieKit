@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  CurieKit.swift
+//
 //
 //  Created by Benji Dodgson on 1/30/24.
 //
@@ -8,12 +8,12 @@
 import Foundation
 
 // The protocol conformance for objects wanting to retrieve `CurieProduct`'s
-public protocol ProductAPIService {
+public protocol CurieServiceProtocol {
     func getProduct(with productId: String) async throws -> CurieProduct?
 }
 
 /// The service responsible for retrieving Products
-public final actor CurieKit: ProductAPIService {
+public final actor CurieKit: CurieServiceProtocol {
 
     public enum ServiceError: Error {
         case decodingError
