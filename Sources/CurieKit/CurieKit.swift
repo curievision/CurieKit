@@ -102,8 +102,14 @@ public final class CurieKit: ProductAPIService {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
         let savedURL = documentsURL.appendingPathComponent(url.lastPathComponent)
 
+        // Check if a file exists at the destination URL and delete it if it does
+        if FileManager.default.fileExists(atPath: savedURL.path) {
+            try FileManager.default.removeItem(at: savedURL)
+        }
+
         try FileManager.default.copyItem(at: tempLocalUrl, to: savedURL)
-        
+
+        // Return the URL where the file was saved
         return savedURL
     }
 }

@@ -10,15 +10,15 @@ import Foundation
 /// The model that represents the 3D asset for display
 public struct CurieProduct {
     /// The unique identifier for the product. Matches the identifier on curie.app
-    let id: String
+    public let id: String
     /// The file url to the locally stored 3D asset
-    let url: URL
+    public let url: URL
     /// The brand name of the product
-    let brandName: String = ""
+    public let brandName: String = ""
     /// The public name of the product
-    let name: String
+    public let name: String
     /// A description of the product
-    let descripton: String = ""
+    public let descripton: String = ""
     /// A date representing when the product was first accessed by the user
-    let timestamp: Date
+    public let timestamp: Date
 }
