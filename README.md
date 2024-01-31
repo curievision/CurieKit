@@ -8,10 +8,6 @@ CurieKit is a Swift package that provides an easy-to-use interface for retrievin
 
 To integrate CurieKit into your Swift project, you can use Swift Package Manager (SPM). Add the following dependency to your Package.swift:
 
-## Installation
-
-To integrate CurieKit into your Swift project, you can use Swift Package Manager (SPM). Add the following dependency to your Package.swift:
-
 `
 dependencies: [
     .package(url: "https://github.com/your-username/CurieKit.git", .upToNextMajor(from: "1.0.0"))
