@@ -137,7 +137,8 @@ public final actor CurieKit: CurieServiceProtocol {
         // Create the cache directory when not present
         try FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
 
-        try FileManager.default.copyItem(at: tempLocalUrl, to: savedURL)
+        // Move the temporary file from the download to the cache directory
+        try FileManager.default.moveItem(at: tempLocalUrl, to: savedURL)
 
         // Return the URL where the file was saved
         return savedURL
