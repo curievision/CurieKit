@@ -98,7 +98,7 @@ public final actor CurieKit: CurieServiceProtocol {
     }
     
     /// Returns an existing URL of a `CurrieProduct`'s 3D asset if one exists
-    /// - Parameter productId: The unique identifier of the `CurrieProduct`
+    /// - Parameter identifier: The unique identifier of the `CurrieProduct`
     /// - Returns: The optional URL of the `CurrieProduct` 3D asset
     private func getExistingProductURL(with identifier: String) -> URL? {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
