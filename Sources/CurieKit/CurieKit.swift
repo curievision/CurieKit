@@ -86,7 +86,7 @@ public final actor CurieKit: CurieServiceProtocol {
     private func getProduct(_ signedURL: URL, productId: String) async throws -> CurieProduct? {
         
         do {
-            let url = try await downloadAsset(from: signedURL)
+            let url = try await downloadAsset(from: signedURL, productId: productId)
         
             return CurieProduct(id: productId,
                            url: url,
@@ -111,9 +111,11 @@ public final actor CurieKit: CurieServiceProtocol {
     }
     
     /// Retrieves a 3D asset and stores in locally
-    /// - Parameter url: The URL address of the desired 3D asset
+    /// - Parameters:
+    ///   - url: The URL address of the desired 3D asset
+    ///   - productId: The unique identifier of the `CurieProduct`
     /// - Returns: The local URL of the stored 3D asset
-    private func downloadAsset(from url: URL) async throws -> URL {
+    private func downloadAsset(from url: URL, productId: String) async throws -> URL {
 
         let (tempLocalUrl, response) = try await session.download(from: url)
 
@@ -122,7 +124,7 @@ public final actor CurieKit: CurieServiceProtocol {
         }
 
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let savedURL = documentsURL.appendingPathComponent(url.lastPathComponent)
+        let savedURL = documentsURL.appendingPathComponent("\(productId).usdz")
 
         // Check if a file exists at the destination URL and delete it if it does
         if FileManager.default.fileExists(atPath: savedURL.path) {
