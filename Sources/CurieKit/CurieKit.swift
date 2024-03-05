@@ -37,7 +37,7 @@ public final actor CurieKit: CurieServiceProtocol {
     // MARK: Public
     
     /// Gets the corresponding `CurieProduct` with a given identifier locally or from the server
-    /// - Parameter identifier: The unique identifer of the `CurieProduct`
+    /// - Parameter identifier: The unique identifier of the `CurieProduct`
     /// - Returns: A `CurieProduct` with a matching identifier OR an `ServiceError`
     public func getProduct(with identifier: String) async throws -> CurieProduct? {
         
