@@ -37,7 +37,7 @@ public final actor CurieKit: CurieServiceProtocol {
     // MARK: Public
     
     /// Gets the corresponding `CurieProduct` with a given identifier locally or from the server
-    /// - Parameter identifier: The unique identifer of the `CurieProduct`
+    /// - Parameter identifier: The unique identifier of the `CurieProduct`
     /// - Returns: A `CurieProduct` with a matching identifier OR an `ServiceError`
     public func getProduct(with identifier: String) async throws -> CurieProduct? {
         
@@ -86,7 +86,7 @@ public final actor CurieKit: CurieServiceProtocol {
     private func getProduct(_ signedURL: URL, productId: String) async throws -> CurieProduct? {
         
         do {
-            let url = try await downloadAsset(from: signedURL)
+            let url = try await downloadAsset(from: signedURL, productId: productId)
         
             return CurieProduct(id: productId,
                            url: url,
@@ -105,7 +105,7 @@ public final actor CurieKit: CurieServiceProtocol {
     }
     
     /// Returns an existing URL of a `CurrieProduct`'s 3D asset if one exists
-    /// - Parameter productId: The unique identifier of the `CurrieProduct`
+    /// - Parameter identifier: The unique identifier of the `CurrieProduct`
     /// - Returns: The optional URL of the `CurrieProduct` 3D asset
     private func getExistingProductURL(with identifier: String) -> URL? {
         let existingURL = cacheDirectory.appendingPathComponent("\(identifier).usdz")
@@ -117,9 +117,11 @@ public final actor CurieKit: CurieServiceProtocol {
     }
     
     /// Retrieves a 3D asset and stores in locally
-    /// - Parameter url: The URL address of the desired 3D asset
+    /// - Parameters:
+    ///   - url: The URL address of the desired 3D asset
+    ///   - productId: The unique identifier of the `CurieProduct`
     /// - Returns: The local URL of the stored 3D asset
-    private func downloadAsset(from url: URL) async throws -> URL {
+    private func downloadAsset(from url: URL, productId: String) async throws -> URL {
 
         let (tempLocalUrl, response) = try await session.download(from: url)
 
@@ -127,7 +129,8 @@ public final actor CurieKit: CurieServiceProtocol {
             throw URLError(.badServerResponse)
         }
 
-        let savedURL = cacheDirectory.appendingPathComponent(url.lastPathComponent)
+        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        let savedURL = documentsURL.appendingPathComponent("\(productId).usdz")
 
         // Check if a file exists at the destination URL and delete it if it does
         if FileManager.default.fileExists(atPath: savedURL.path) {
