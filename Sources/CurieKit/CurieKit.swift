@@ -97,12 +97,18 @@ public final actor CurieKit: CurieServiceProtocol {
         }
     }
     
+    /// Curie's local cache directory for already downloaded products.
+    private var cacheDirectory: URL {
+        return FileManager.default
+            .urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appending(path: "Curie", directoryHint: .isDirectory)
+    }
+    
     /// Returns an existing URL of a `CurrieProduct`'s 3D asset if one exists
     /// - Parameter identifier: The unique identifier of the `CurrieProduct`
     /// - Returns: The optional URL of the `CurrieProduct` 3D asset
     private func getExistingProductURL(with identifier: String) -> URL? {
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let existingURL = documentsURL.appendingPathComponent("\(identifier).usdz")
+        let existingURL = cacheDirectory.appendingPathComponent("\(identifier).usdz")
         if FileManager.default.fileExists(atPath: existingURL.path) {
             return existingURL
         } else {
@@ -131,7 +137,11 @@ public final actor CurieKit: CurieServiceProtocol {
             try FileManager.default.removeItem(at: savedURL)
         }
 
-        try FileManager.default.copyItem(at: tempLocalUrl, to: savedURL)
+        // Create the cache directory when not present
+        try FileManager.default.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
+
+        // Move the temporary file from the download to the cache directory
+        try FileManager.default.moveItem(at: tempLocalUrl, to: savedURL)
 
         // Return the URL where the file was saved
         return savedURL
