@@ -129,8 +129,7 @@ public final actor CurieKit: CurieServiceProtocol {
             throw URLError(.badServerResponse)
         }
 
-        let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-        let savedURL = documentsURL.appendingPathComponent("\(productId).usdz")
+        let savedURL = cacheDirectory.appendingPathComponent("\(productId).usdz")
 
         // Check if a file exists at the destination URL and delete it if it does
         if FileManager.default.fileExists(atPath: savedURL.path) {
